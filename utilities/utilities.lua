@@ -1,6 +1,4 @@
 require 'common-torch/utilities'
-require 'common-torch/utilities/gnuplot'
-
 require 'utilities/utilitiesData'
 require 'utilities/utilitiesInference'
 
@@ -10,11 +8,9 @@ function capFirst( str )
 
 end
 
-function baseDir( main ) 
+function baseDir() 
 
-	local post = main and 'main' or 'recovery'
-
-	return '/scratch/ojh221/results/untangling-neural/' .. post .. '/project' .. project .. '/' 
+	return '/scratch/ojh221/results/neural-straightening/project' .. project .. '/' 
 
 end 
 
@@ -58,46 +54,6 @@ function dataName( main, dataset )
 
 end 
 
--- function makeDirs( main )
-
--- 	local savedir  = baseDir(main)
-
--- 	local dataDir  = savedir .. dataName( main, dataset ) .. '/' 
-
--- 	local analysisName = spikeCountDistributionModel 
-
--- 	if spikeCountDistributionModel == 'OverdispersedShared' then 
-
--- 		analysisName = analysisName .. nModulatorsModel .. '_mean1'
-
--- 	end
-
---     analysisName = analysisName 
--- 					.. '_nl' .. spikeNLmodel
--- 					.. '_'        .. inferenceMeth 
--- 					.. '_maxiter' .. maxiter 
--- 					.. '_collect' .. collectLossFrom
-
--- 	analysisName = analysisName .. '_mb'  .. mb .. '_unc' .. capFirst( uncertaintyInit ) 
--- 								.. '_curvPost' .. capFirst( curvInitPost ) .. 'Prior' .. capFirst( curvInitPrior )   
--- 								.. '_accPrior' .. priorAcc 
-
--- 	local resultsDir  = dataDir .. 'results/'  .. analysisName .. '/' 
--- 	local analysisDir = dataDir .. 'analysis/' .. analysisName .. '/' 
--- 	local dataDir     = dataDir .. 'data/'
-
--- 	os.execute( 'mkdir -p ' .. dataDir     )
--- 	os.execute( 'mkdir -p ' .. analysisDir )
--- 	os.execute( 'mkdir -p ' .. resultsDir  )
-
--- 	return dataDir, resultsDir, analysisDir 
-
--- end
-
-
--- function makeDirsMain()     return makeDirs( true  ) end 
--- function makeDirsRecovery() return makeDirs( false ) end 
-
 function makeDirsNew( domain, main )
 
 	local domainStr = domain 
@@ -118,8 +74,6 @@ function makeDirsNew( domain, main )
 	end
 
 	local savedir  = baseDir(main)
-
-	-- print( 'mb', mb, 'dim', dim, 'ditherSamples', ditherSamples, 'binSamples', binSamples, 'ditherSamplesJoint', ditherSamplesJoint )
 
 	savedir = savedir .. 'dataset'
 	if     ditherSamples      then

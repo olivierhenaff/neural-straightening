@@ -66,9 +66,6 @@ function effectiveSigG( data )
 
 	local dim = data:size(3)
 
-	-- print( data:size() ) 
-	-- error('data:size()')
-
 	local inode = nn.Identity()()
 
 	local qParams  = nn.SelectTable( 1 )( inode ) -- [ mb, 2, nTrials, nsmpl, dim ] 

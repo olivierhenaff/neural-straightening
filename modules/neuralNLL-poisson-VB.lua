@@ -337,8 +337,6 @@ end
 
 function likelihood:loadData( data, dataMask )
 
-	-- print( 'load data likelihood' )
-
 	self.nll:loadData( data, dataMask ) 
 
 end
@@ -347,7 +345,6 @@ function likelihood:cuda()
 
 	self.network:float()
 	self.network:cuda()
-
 	self.gradOutput = self.gradOutput:cuda()
 
 end

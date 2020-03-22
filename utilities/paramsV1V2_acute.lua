@@ -1,19 +1,5 @@
 require 'utilities/paramsV1V2'
 
--- datasets = {
--- 	-- 'NaturalSequences_ay2_u004', -- V2 *optim*
--- 	-- 'NaturalSequences_ay4_u000', -- V2
--- 	-- 'NaturalSequences_ay4_u007', -- V2
--- 	-- 'NaturalSequences_ay2_u005', -- V2 (new) *optim*
--- 	-- 'NaturalSequences_ay2_u006', -- V2 (new)
--- 			}
--- 	-- 'NaturalSequences_ay0_u013', -- V1, less responsive, towards end of acute, old monkey from eyal's lab, basic chars (ori selectivity) OK. lots of missing data.  
--- 	-- 'NaturalSequences_ay0_u014', -- V1, less responsive, towards end of acute, old monkey from eyal's lab, basic chars (ori selectivity) OK.   
--- 	-- 'NaturalSequences_ay0_u000', -- V1, not many cells, also possible timing issues, also more anaesthesia. best of ay0. 
-
-
-
-
 function get_datasets(batch)
 
 	local datasets = {
@@ -26,21 +12,6 @@ function get_datasets(batch)
 		'ay2_u007_image_sequences',  -- V1 7 
 		'ay5_u002_image_sequences',  -- V1 8
 		'ay5_u005_image_sequences',  -- V1 9
-
-		'NaturalSequences_ay2_u003', -- V1, good quality. recent recording
-		'NaturalSequences_ay4_u001', -- V1, good quality. recent recording
-		'NaturalSequences_ay4_u006', -- V1, good quality. recent recording
-		'NaturalSequences_ay4_u005', -- V1, good quality. recent recording
-		'NaturalSequences_ay3_u001', -- V1, EPIC data
-
-
-		-- 'ay2_u004_image_sequences',  -- V2 10
-		-- 'ay2_u005_image_sequences',  -- V2 11
-		-- 'ay2_u006_image_sequences',  -- V2 12
-		-- 'ay4_u000_image_sequences',  -- V2 13
-		-- 'ay4_u004_image_sequences',  -- V2 14
-		-- 'ay4_u007_image_sequences',  -- V2 15
-		-- 'ay5_u004_image_sequences',  -- V2 16
 	}
 
 	local datasets1, datasets2, datasets3, datasets12 = {}, {}, {}, {} 

@@ -91,8 +91,6 @@ if params.seed >  0 then
 
 	torch.save( resultsDir, results )
 
-	-- saveLossOverTime( results, analysisDir )
-
 elseif params.seed < 0 then 
 
 	collectAllResults( - params.seed )
