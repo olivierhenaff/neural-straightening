@@ -48,27 +48,13 @@ end
 
 function loadData( dataset )
 
-	local data, dataMask, trialLength
-
-	if dataset:find('ITdata') then
-
-		data, dataMask, trialLength = loadDataIT( dataset ) 
-
-	else
-		
-		-- data, dataMask, trialLength = loadDataV1V2( dataset ) 
-		data, dataMask, trialLength = loadDataV1V2_dataset( dataset ) 
-
-	end
+	local data, dataMask, trialLength = loadDataV1V2_dataset( dataset ) 
 
 	if bootstrapInd > 1 then 
 
 		data, dataMask = bootstrapData( data, dataMask )
 
 	end
-
-	-- print( data:size() ) 
-	-- error('data:size()')
 
 	return data, dataMask, trialLength 
 

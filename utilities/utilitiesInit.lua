@@ -11,8 +11,6 @@ function initializeNeuronParams( data, embedding, memb_mean )
 	init = initializeSharedParams(   init, data ) 
 	init = initializeEmbedding( init, embedding ) 
 
-	-- table.insert( init, memb_mean )
-
 	return init 
 
 end
@@ -99,8 +97,6 @@ function initializePolarParams( traj )
 		local v_emp = traj:narrow( 1, 2, nsmpl-1 ):clone():add( -1, traj:narrow( 1, 1, nsmpl-1 ) )
 		for i = 1, nsmpl-1 do v_emp[i]:div( v_emp[i]:norm() ) end 
 
-		-- print( v_emp ) 
-
 		local dHat, cHat = computeDistCurvature( traj )
 
 		 dInit[n]:copy( dHat ):apply( softPlusInv )
@@ -111,24 +107,9 @@ function initializePolarParams( traj )
 
 			aInit[n]:select( 2, i ):copy( v_emp[i+1] ):add( -math.cos(cHat[i]), v_emp[i] ) 
 
-			-- if i == 1 then 
-
-			-- 	print( 'n = ' .. n )
-			-- 	print( v_emp[i+1] )
-			-- 	print( v_emp[i] )
-
-			-- end
-
 		end
 
-
-
 	end
-
-	-- print( aInit )
-	-- print( aInit:select( 2, 1 ) ) 
-
-	-- print( aInit:eq(aInit):select(2,1) )
 
 	local init   = { dInit, cInit, aInit, v0Init, z0Init }
 
@@ -138,31 +119,12 @@ end
 
 function initializeTrialAverage( data, dataMask, trialLength, spikeNL ) 
 
-	--- ML estimator ------------------------------
-
-	-- print(data:min(), data:max())
-	-- print(dataMask:min(), dataMask:max() ) 
-
-	-- local rates_emp  =  data:clone():div( trialDuration ):cmul( dataMask ):sum(1):squeeze():cdiv( dataMask:sum(1) )
-	local rates_emp  =  data:clone():div( trialDuration ):cmul( dataMask ):sum(1):squeeze():cdiv( dataMask:sum(1):add(1) )
+	local rates_emp  =  data:clone():cmul( dataMask ):sum(1):squeeze():cdiv( dataMask:sum(1):add(1) )
 	local membs_emp  = rates_emp:clone():add( 0.1 )
 	-- local membs_emp  = rates_emp:clone():add( 0.01 )
 	-- local membs_emp  = rates_emp:clone():add( 1e-3 )
 
-	-- print('rates_emp')
-	-- print( rates_emp:mean() ) 
-	-- print('membs_emp')
-	-- print( membs_emp:mean() ) 
-	-- error('ssotp here')
-
-	-- print('initializeTrialAverage 1 dim = ', dim )
-
 	dim = math.min( dim, data:size(3) )
-
-	-- print('initializeTrialAverage 2 dim = ', dim )
-
-
-	-- print( rates_emp:size() ) 
 
 	if     spikeNL == 'Exp'      then 
 		membs_emp:log()
@@ -180,35 +142,16 @@ function initializeTrialAverage( data, dataMask, trialLength, spikeNL )
 		error('unknown spikeNL')
 	end
 
-	-- print( membs_emp:mean() ) 
-	-- error('sotp here')
-
-
-	-- print('mb = ', mb )
-
 	local membs_lowD = torch.Tensor( membs_emp:size(1), dim, membs_emp:size(3) )
 	local embedding  = torch.Tensor( mb, membs_emp:size(2), dim ) 
 	local membs_mean = torch.Tensor( mb, membs_emp:size(2) ) 
-
-	-- print('membs_mean:size()')
-	-- print( membs_mean:size() ) 
-	-- print('membs_emp:size()')
-	-- print( membs_emp:size() )
 
 	for i = 1, membs_emp:size(3) do 
 
 		local x = membs_emp:select( 3, i ):clone()
 		local m = x:mean(1)
 		membs_mean[i]:copy( m ) 
-
-		-- print( x:size() ) 
-		-- print( x:mean() )
-
 		local u, s, v = torch.svd( x:clone():add( -1, m:expandAs( x ) ) ) 
-
-		-- print( 'dim', dim )
-		-- error('stop here')
-
 		v = v:narrow( 2, 1, dim )
 		membs_lowD:select( 3, i ):copy( x * v ) 
 		embedding[i]:copy( v ) 
@@ -243,14 +186,6 @@ function initializeTrialAverage( data, dataMask, trialLength, spikeNL )
 		cInit = init[1][2] 
 	end
 	local curvML = cInit:select( 2, 1 ):mean(2):div(math.pi)
-
-
-	-- print( init )
-	-- for i = 1, #init[1] do 
-	-- 	print( init[1][i]:mean() ) 
-	-- end
-	-- error('sotp here')
-
 
 	return init, curvML, embedding, membs_mean
 
@@ -306,20 +241,10 @@ function initializePrior( init, maxInd )
 
 	end 
 
-	if     curvInitPrior == 'tile' then 
 
-		local margin = 0.1 
-		local cInits = torch.linspace( margin, 1-margin, mb-1 ):mul( math.pi )
+	local thetaTransfer = nn.Sequential():add( nn.Sigmoid() ):add( nn.MulConstant( math.pi ) ) 
 
-		for n = 2, mb do init[7][n][1] = cInits[n-1] end 
-
-	elseif curvInitPrior == 'ML'   then
-
-		local thetaTransfer = nn.Sequential():add( nn.Sigmoid() ):add( nn.MulConstant( math.pi ) ) 
-
-		init[7]:select( 2, 1 ):copy( thetaTransfer:updateOutput( init[7]:select( 2, 1 ) ) )
-
-	end
+	init[7]:select( 2, 1 ):copy( thetaTransfer:updateOutput( init[7]:select( 2, 1 ) ) )
 
 	return init 
 

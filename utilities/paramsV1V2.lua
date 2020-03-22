@@ -5,9 +5,6 @@ project = 'V1V2'
 spikeCountDistributionModel = 'OverdispersedShared'; sigNinit = 0.1; nModulatorsModel = 2
 -- spikeCountDistributionModel = 'OverdispersedShared'; sigNinit = 0.1; nModulatorsModel = 3
 
-trialDuration = 1.0 -- in seconds
--- trialDuration = 0.2 -- in seconds 
-
 function getCorticalArea( dataset )
 
 	local area = dataset:match('_V%d_'):gsub('_','')

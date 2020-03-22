@@ -272,7 +272,6 @@ function likelihood:__init( data, dataMask, trialLength, dim, mb, init, determin
 	-- local mulLength = nn.CMul( trialLength:size() )
 	-- mulLength.weight:copy( trialLength )
 	-- rate = mulLength( rate )
-	rate = nn.MulConstant( trialDuration )( rate )
 	-- rate = nn.AddConstant( 1e-3 )( rate )
 
 	-- rate:annotate{ name = 'rateTrajectory' }

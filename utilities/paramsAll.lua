@@ -6,7 +6,6 @@ spikeNLmodel = 'SquaredSinhSoftPlus'
 inferenceMeth   = 'VB'
 maxiter         = 50000; collectLossFrom = 40000
 
-uncertaintyInit = 'zero'
 curvInitPost    = 'ML'
 curvInitPrior   = 'ML'
 

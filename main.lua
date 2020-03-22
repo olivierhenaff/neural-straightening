@@ -21,11 +21,6 @@ cmd:option('-seed',  1, 'job id')
 cmd:option('-domain', 'neural', 'neural or pixel')
 -- cmd:option( '-domain', 'pixel-full' , 'neural or pixel' )
 
-cmd:option('-dither',  1, '1, 2, 3, or 5')
--- cmd:option( '-dither', 21, '1, 2, 3, or 5' ) -- 21 and 22 for even and odd, subsampling by a factor of 2
--- cmd:option( '-dither', 22, '1, 2, 3, or 5' ) -- 21 and 22 for even and odd, subsampling by a factor of 2
--- cmd:option( '-dither', 31, '1, 2, 3, or 5' ) -- 31 and 32 for even and odd, subsampling by a factor of 3 (can't do third sampling)
--- cmd:option( '-dither', 32, '1, 2, 3, or 5' ) -- 31 and 32 for even and odd, subsampling by a factor of 3 (can't do third sampling)
 -- cmd:option('-ditherJoint', 1, '1, 2, 3, or 5')
 cmd:option( '-ditherJoint', 2, '1, 2, 3, or 5' )
 -- cmd:option('-ditherJoint', 3, '1, 2, 3, or 5')
@@ -42,18 +37,9 @@ if params.datasetBatch > 0 then datasetBatch = params.datasetBatch end
 
 print('datasetBatch', datasetBatch)
 
-if     params.dither > 1 then
-
-	ditherSamples = params.dither
-	ditherInds, dim = ditherSamplesInds(ditherSamples)
-
-elseif params.ditherJoint > 1 then
-
-	ditherSamplesJoint = params.ditherJoint
-	ditherInds, dim = ditherSamplesInds(ditherSamplesJoint)
-	mb = mb * ditherSamplesJoint
-
-end
+ditherSamplesJoint = params.ditherJoint
+ditherInds, dim = ditherSamplesInds(ditherSamplesJoint)
+mb = mb * ditherSamplesJoint
 
 print( 'mb', mb, 'dim', dim, 'ditherSamples', ditherSamples, 'binSamples', binSamples, 'ditherSamplesJoint', ditherSamplesJoint )
 
