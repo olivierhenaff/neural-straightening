@@ -1,6 +1,5 @@
 require 'common-torch/utilities/curvature'
 require 'randomkit'
--- require 'untangling-neural/modules/multiscale'
 
 function initializeNeuronParams( data, embedding, memb_mean ) 
 
